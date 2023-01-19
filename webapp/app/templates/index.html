@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <style>
+    .heading {
+      background-color: #D5F1E8;
+    }
+
+    .table-format {
+      margin-right: 4rem;
+    }
+    .admin-link {
+      text-align: end;
+    }
+  </style>
+  </head>
+  <body>
+    <div class="row heading mt-5">
+      <div class="col-6">
+        <h1 class="text-center ">Ionosounde Locations</h1>
+      </div>
+      <div class="col-6 admin-link">
+        <h4 class="text-right mt-3"><a href="/receiver-info" class="">Admin</a></h4>
+      </div>
+    </div>
+    <div class="table-format">
+      <table width="100%" class="table m-4">
+        <thead class="table-dark table-bordered">
+          <tr class="text-center">
+            <th scope="col">ID</th>
+            <th scope="col">TX Code</th>
+            <th scope="col">Transmitter Name</th>
+            <th scope="col">Latitude</th>
+            <th scope="col">Longitude</th>
+            <th scope="col">Ground Range [km]</th>
+            <th scope="col">Chrip Rate [kHz/s]</th>
+            <th scope="col">View Details</th>
+          </tr>
+        </thead>
+        <tbody>
+         {% for d in data %}
+         <tr class="text-center">
+          <td>{{d.id}}</td>
+          <td>{{d.tx_code}}</td>
+          <td>{{d.name_of_transmitter}}</td>
+          <td>{{d.lat}}</td>
+          <td>{{d.longitude}}</td>
+          <td>{{d.range_zero}}</td>
+          <td>{{d.chriprate}}</td>
+          <td><a href="{% url 'edit-transmitter' d.id %}" class="btn btn-success">Edit</a>
+          <a href="{% url 'filter' d.id %}" class="btn btn-success">Filter Ionogram</a>
+          <a href="{% url 'filter' d.id %}" class="btn btn-success">View Ionogram</a>
+          <a href="{% url 'filter' d.id %}" class="btn btn-success">Create keogram</a>
+          <a href="{% url 'filter' d.id %}" class="btn btn-success">View Keogram</a>
+        </td>
+        </tr>
+        {% endfor %}
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  </body>
+</html>

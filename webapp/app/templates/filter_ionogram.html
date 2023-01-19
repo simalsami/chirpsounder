@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Filtered LFM VA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        .heading {
+            background-color: #D5F1E8;
+        }
+
+        .table-format {
+            margin-right: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row heading mt-5">
+        <h1 class="text-center ">Filtered LFM files Associated to {{name.name_of_transmitter}} Transmitter</h1>
+    </div>
+    <div class="table-format">
+        <table width="100%" class="table m-4">
+            <thead class="table-dark table-bordered">
+                <tr class="text-center">
+                    <th scope="col">Nr</th>
+                    <th scope="col">TX Code</th>
+                    <th scope="col">RX Code</th>
+                    <th scope="col">Datetime</th>
+                    <th scope="col">Name of PAR files</th>
+                    <th scope="col">Name of LFM files</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, j in data %}
+                <tr class="text-center">
+                    <td>{{i| add:"1"}}</td>
+                    <td>{{name.tx_code}}</td>
+                    <td>RX Code</td>
+                    <td>2023-01-12</td>
+                    <td>Par File will be displayed here</td>
+                    <td>{{j}}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
