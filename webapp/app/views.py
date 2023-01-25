@@ -16,16 +16,20 @@ def homepage(request):
 
 
 def filter_ionograms(request, id):
-    data = Chripsounder.objects.filter(id=id).values()[0]
-    print(data)
-    x = os.path.exists('/home/nishayadav/Myprojects/lfm_va')
-    if not x:
-        filter_ionogram.creating_data_file(data=data)
-    lfm_vir = "/home/nishayadav/Myprojects/lfm_va/*"
-    files = glob.glob(lfm_vir)
-    files = [i.split('/')[-1] for i in files]
-    files = enumerate(files)
-    return render(request, 'filter_ionogram.html', {"data": files, "name": data})
+    if request.method == 'POST':
+        selected_date = request.POST['selected_date']
+        print(selected_date)
+        data = Chripsounder.objects.filter(id=id).values()[0]
+        print(data)
+        x = os.path.exists('/home/nishayadav/Myprojects/lfm_va')
+        if not x:
+            filter_ionogram.creating_data_file(data, selected_date)
+        lfm_vir = "/home/nishayadav/Myprojects/lfm_va/*"
+        files = glob.glob(lfm_vir)
+        files = [i.split('/')[-1] for i in files]
+        files = enumerate(files)
+        base_url = "/home/nishayadav/Myprojects/lfm_va"
+        return render(request, 'filter_ionogram.html', {"data": files, "name": data, "base_url": base_url, "selected_date": selected_date})
 
 def edit_transmitter(request, id):
     data = Chripsounder.objects.filter(id = id)
@@ -69,3 +73,29 @@ def receiver_info(request):
 
 def filter_ionogramss(request):
     pass
+
+
+
+def edit_receiver(request, id):
+    data = ReceiverInfos.objects.filter(id = id)
+    context = {}
+    if request.method == 'POST':
+        receiver_name = request.POST['receiver_name']
+        receiver_code = request.POST['receiver_code']
+        receiver_location = request.POST['receiver_location']
+        receiver_lat = request.POST['receiver_lat']
+        receiver_long = request.POST['receiver_long']
+        
+        context.update(
+        {
+            "receiver_name": receiver_name,
+            "receiver_code": receiver_code,
+            "receiver_location": receiver_location,
+            "receiver_lat": receiver_lat,
+            "receiver_long": receiver_long,
+        }
+        )
+        data.update(**context)
+        return redirect('receiver-info')
+    return render(request, 'edit-receiver.html', {"data": data[0]})
+    

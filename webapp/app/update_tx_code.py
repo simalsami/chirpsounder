@@ -20,15 +20,27 @@ def create_db_connection():
 #Function Name      :               update_virginia_tx_code
 #Functionality      :               Updating TX_CODE_VA field in DB
 
-def update_virginia_tx_code(conn, lfm_file):
+def update_tx_code(conn, file):
         # for i in glob.glob('/home/nishayadav/Myprojects/lfm_va/*'):
-        i = lfm_file.split("/")[-1]
+        table_name = None
         cursor = conn.cursor()
-        print("file is:- ", lfm_file)
-        cursor.execute(
-            f"update table_lfm_file set TX_CODE_VA = true where split_part(lfm_filename, '/', 2) = '{i}'",
+        i = file.split("/")[-1]
+        print("File under tax code functions:-", file)
+        if i.startswith("par"):
+            table_name = 'table_par_file'
+            cursor.execute(
+            f"update {table_name} set tx_cva_rx_w2naf = true where split_part(par_filename, '/', 2) = '{i}'",
 
         )
+        elif i.startswith("lfm"):
+            table_name = 'table_lfm_file'
+            cursor.execute(
+            f"update {table_name} set tx_cva_rx_w2naf = true where split_part(lfm_filename, '/', 2) = '{i}'",
+
+        )
+        
+            print("file is:- ", file)
+        
 
         conn.commit()
         print("Done...")

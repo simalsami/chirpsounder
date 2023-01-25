@@ -15,6 +15,8 @@ class Chripsounder(models.Model):
     first_hop_range_two = models.IntegerField(default=0)
     second_hop_range_one = models.IntegerField(default=0)
     second_hop_range_two = models.IntegerField(default=0)
+    # this is receiver
+    receiver_code = models.CharField('Receiver Code', max_length=100)
 
 
     class Meta:
