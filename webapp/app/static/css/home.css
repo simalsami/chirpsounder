@@ -1,0 +1,65 @@
+
+.heading {
+  background-color: #753f97 !important;
+  color: white !important;
+  border-radius: 11px 15px 0px 0px;
+}
+.transmitter-edit {
+  background-color: #f5ecfb !important;
+  margin-left: -11px !important;
+  margin-right: -11px !important;
+  border-radius: 11px 15px 0px 0px;
+}
+
+.Ionosonde-list {
+  background-color: #753f97 !important;
+  color: white;
+  margin-left: -11px !important;
+  margin-right: -11px !important;
+  border-radius: 11px 15px 0px 0px !important;
+}
+
+.table-format {
+  margin-right: 4rem;
+}
+.admin-link {
+  text-align: end;
+}
+
+.custom-nav {
+  background-color: #502e6c;
+}
+
+.custom-button {
+  background-color: #753f97;
+  color: white;
+  border: #753f97 !important;
+}
+
+.btn:active {
+  background-color: #753f97;
+  color: white;
+  border: #753f97 !important;
+}
+
+.btn:hover {
+  background-color: #753f97;
+  color: white;
+  border: #753f97 !important;
+  
+}
+
+.btn:focus {
+  background-color: #753f97 !important;
+  color: white;
+  border: #753f97 !important;
+  
+}
+
+.table-format {
+  margin-right: 4rem;
+}
+
+.edit-input {
+  margin-bottom: 1.5rem;
+}

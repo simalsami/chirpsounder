@@ -26,8 +26,30 @@ def filter_ionograms(request, id):
             filter_ionogram.creating_data_file(data, selected_date)
         lfm_vir = "/home/nishayadav/Myprojects/lfm_va/*"
         files = glob.glob(lfm_vir)
-        files = [i.split('/')[-1] for i in files]
-        files = enumerate(files)
+        h5_files = []
+        png_files = []
+        for file_name in files:
+            if file_name.endswith("h5"):
+                h5_files.append(file_name)
+            else:
+                png_files.append(file_name)
+        
+        # files = [i.split('/')[-1] for i in files]
+
+        # print(h5_files)
+        # print(png_files)
+        filter_data = []
+        for i in h5_files:
+            for j in png_files:
+                if i.split(".")[0] == j.split(".")[0]:
+                    filter_data.append({'h5_file': i.split("/")[-1], 'h5_png_file': j.split("/")[-1]})
+
+
+        print(filter_data)
+
+
+
+        files = enumerate(filter_data)
         base_url = "/home/nishayadav/Myprojects/lfm_va"
         return render(request, 'filter_ionogram.html', {"data": files, "name": data, "base_url": base_url, "selected_date": selected_date})
 
