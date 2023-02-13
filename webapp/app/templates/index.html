@@ -14,10 +14,21 @@
   </head>
   <body>
     {% include 'menu.html' %}
-    <div class="row mt-5">
-      <div class="col-md-6 offset-md-3">
-        <h3 class="text-center Ionosonde-list">Ionosounde Locations</h3>
-      </div>
+    
+      <div class="container">
+        <div class="row mt-5">
+          <div class="col-xl-3">
+            <a href="{% url 'unfiltered_ionograms' %}" class="btn custom-button">View Unfiltered</a>
+          </div>
+    
+          <div class="col-xl-9">
+            <h3 class="text-center Ionosonde-list">Ionosounde Locations</h3>
+            
+          </div>
+        </div>
+        </div>
+        
+      
     </div>
     <div class="table-format">
       <table width="100%" class="table m-4">
@@ -45,15 +56,18 @@
           <td>{{d.range_zero}}</td>
           <td>{{d.chriprate}}</td>
           <td><a href="{% url 'edit-transmitter' d.id %}" class="btn custom-button">Edit{% bs_icon 'pencil' %} </a>
-          <span class="btn btn-sm custom-button"><form method='POST' action="/filter-ionograms/{{d.id}}">
+          <span class="btn btn-sm custom-button">
+          <form method='POST' action="/filter-ionograms/{{d.id}}">
             {% csrf_token %}
             <input type="date" name="selected_date" id="" required>
             <button type="submit" class="btn custom-button">Filter Ionogram {% bs_icon 'search' %}</button>
           </form></span>
-          <a href="{% url 'filter' d.id %}" class="btn custom-button">View filtered </a>
-          <a href="{% url 'filter' d.id %}" class="btn custom-button">View Ionogram</a>
-          <a href="{% url 'filter' d.id %}" class="btn custom-button">Create keogram</a>
-          <a href="{% url 'filter' d.id %}" class="btn custom-button">View Keogram</a>
+          
+          <!-- <a href="{% url 'view_filtered_ionograms' %}" class="btn custom-button">Filter Ionogram {% bs_icon 'search' %}</a> -->
+          <a href="{% url 'ionograms_filter' d.id %}" class="btn custom-button">View filtered </a>
+          
+          <a href="{% url 'ionograms_filter' d.id %}" class="btn custom-button">Create keogram</a>
+          <a href="{% url 'ionograms_filter' d.id %}" class="btn custom-button">View Keogram</a>
         </td>
         </tr>
         {% endfor %}

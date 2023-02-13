@@ -287,15 +287,16 @@ def save_var(dirs1, DataDict):
 #Parameters         :               data
 
 
-def creating_data_file(data, selected_date):
+def creating_data_file(data, folder_name):
 
     # filter ionograms for range of entered dates
     # date format "yyyy-mm-dd"
     # 2023-01-27
-    selected_date = selected_date.split("-")
-    year = int(selected_date[0])
-    month = int(selected_date[1])
-    day = int(selected_date[2])
+    print("Date:- ", folder_name)
+    folder_name = folder_name.split("-")
+    year = int(folder_name[0])
+    month = int(folder_name[1])
+    day = int(folder_name[2])
     startDate = datetime.date(year, month, day)
     endDate = datetime.date(year, month, day)
     deltaDate = datetime.timedelta(days=1)

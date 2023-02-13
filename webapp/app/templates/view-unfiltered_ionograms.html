@@ -16,7 +16,7 @@
 
     <div class="row mt-5">
         <div class="col-md-8 offset-md-2">
-          <h3 class="text-center Ionosonde-list">Filtered LFM files Associated to {{name.name_of_transmitter}} Transmitter</h3>
+          <h3 class="text-center Ionosonde-list">Unfiltered LFM files Associated to Transmitter</h3>
         </div>
       </div>
 
@@ -36,15 +36,27 @@
                 {% for i, j in data %}
                 <tr class="text-center">
                     <td>{{i| add:"1"}}</td>
-                    <td>{{name.tx_code}}</td>
-                    <td>{{name.receiver_code}}</td>
+                    <td>None</td>
+                    <td>W2NAF</td>
                     <td>{{j.selected_date}}</td>
-                    <td><a href='/static/lfm_va/{{j.h5_file}}' download>{{j.h5_file}}</a></td>
-                    {% if j.h5_file and j.h5_png_file %}
-                    <td><a href="{% url 'view-ionograms' j.h5_png_file %}" class=""><img src="/static/lfm_va/{{j.h5_png_file}}" alt="ionogram" width="50px" height="50px"></a></td>
+                    <td><a href='/static/{{j.selected_date}}/{{j.h5_file}}' download>{{j.h5_file}}</a></td>
+                    
+
+                    {% if j.h5_png_file %}
+
+                    <td><a href="{% url 'view-ionograms' j.h5_png_file %}" class=""><img src="/static/{{j.selected_date}}/{{j.h5_png_file}}" alt="ionogram" width="50px" height="50px"></a></td>
+
                     {% else %}
-                    <td><a href="{% url 'create_ionograms' j.h5_file %}" class="btn custom-button">Regenerate{% bs_icon 'arrow-clockwise' %}</a></td>
+
+                    <td>Not Available</td>
+
                     {% endif %}
+
+
+
+                    
+                    <!-- <td><a href="{% url 'create_ionograms' j.h5_file %}" class="btn custom-button">Regenerate{% bs_icon 'arrow-clockwise' %}</a></td> -->
+                    
                 </tr>
                 {% endfor %}
 

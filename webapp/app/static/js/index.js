@@ -1,7 +1,7 @@
 
 
-
-function custom_function()
-{
-    alert("Your data is being prepared....");
+function checkboxClick(event) {
+  
+  history.go(-1)
+  event.preventDefault();
 }
