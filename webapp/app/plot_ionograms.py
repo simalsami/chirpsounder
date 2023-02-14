@@ -14,15 +14,26 @@ import time
 import traceback
 import re
 
+"""
+"station_name":"station_name",
+"max_range_extent":"2000e3",
+"min_range":"200e3",
+"max_range":"1500e3",
+"max_range_extent":"2000e3",
+"manual_range_extent":"false",
+"minimum_analysis_frequency":"0.0", 
+"copy_to_server":"false",
+"copy_destination":"none",
+"""
 
-def plot_ionogram(conf,f,normalize_by_frequency=True):
+def plot_ionogram(output_dir,max_range_extent ,min_range,max_range,manual_range_extent,minimum_analysis_frequency,manual_freq_extent,copy_to_server,copy_destination,station_name,min_freq,max_freq,maximum_analysis_frequency,f,normalize_by_frequency=True):
     ho=h5py.File(f,"r")
     t0=float(n.copy(ho[("t0")]))
     if not "id" in ho.keys():
         return
     cid=int(n.copy(ho[("id")]))  # ionosonde id
     
-    img_fname="%s/lfm_ionogram-%03d-%1.2f.png"%(conf.output_dir,cid,t0)
+    img_fname="%s/lfm_ionogram-%03d-%1.2f.png"%(output_dir,cid,t0)
     if os.path.exists(img_fname):
         #print("Ionogram plot %s already exists. Skipping"%(img_fname))
         ho.close()
@@ -61,18 +72,18 @@ def plot_ionogram(conf,f,normalize_by_frequency=True):
     plt.pcolormesh(freqs/1e6,range_gates,dB,vmin=-3,vmax=30.0,cmap="inferno")
     cb=plt.colorbar()
     cb.set_label("SNR (dB)")
-    plt.title("Chirp-rate %1.2f kHz/s t0=%1.5f (unix s)\n%s %s (UTC)"%(float(n.copy(ho[("rate")]))/1e3,float(n.copy(ho[("t0")])),conf.station_name,unix2datestr(float(n.copy(ho[("t0")])))))
+    plt.title("Chirp-rate %1.2f kHz/s t0=%1.5f (unix s)\n%s %s (UTC)"%(float(n.copy(ho[("rate")]))/1e3,float(n.copy(ho[("t0")])),station_name,unix2datestr(float(n.copy(ho[("t0")])))))
     plt.xlabel("Frequency (MHz)")
     plt.ylabel("One-way range offset (km)")
-    if conf.manual_range_extent:
-        plt.ylim([conf.min_range/1e3,conf.max_range/1e3])
+    if manual_range_extent:
+        plt.ylim([min_range/1e3,max_range/1e3])
     else:
-        plt.ylim([dr-conf.max_range_extent/1e3,dr+conf.max_range_extent/1e3])
+        plt.ylim([dr-max_range_extent/1e3,dr+max_range_extent/1e3])
 #    plt.ylim([dr-1000.0,dr+1000.0])
-    if conf.manual_freq_extent:
-        plt.xlim([conf.min_freq/1e6,conf.max_freq/1e6])
+    if manual_freq_extent:
+        plt.xlim([min_freq/1e6,max_freq/1e6])
     else:
-        plt.xlim([0,conf.maximum_analysis_frequency/1e6])
+        plt.xlim([0,maximum_analysis_frequency/1e6])
     plt.tight_layout()
     plt.savefig(img_fname)
     fig.clf()
@@ -82,34 +93,28 @@ def plot_ionogram(conf,f,normalize_by_frequency=True):
     gc.collect()
     ho.close()
     sys.stdout.flush()
-    if conf.copy_to_server:
-        os.system("rsync -av %s %s/latest_%s.png"%(img_fname,conf.copy_destination,conf.station_name))
+    if copy_to_server:
+        os.system("rsync -av %s %s/latest_%s.png"%(img_fname,copy_destination,station_name))
 
 
 def create_plot_ionograms(filename):
-    conf=chirp_config()
+    # conf=chirp_config()
+    station_name="station_name"
+    max_range_extent=2000000.0
+    min_range=200000.0
+    max_range=1500000.0
+    manual_range_extent=False
+    minimum_analysis_frequency=0.0
+    copy_to_server=False
+    copy_destination=None
+    manual_freq_extent=False
+    maximum_analysis_frequency=25000000.0
+    output_dir="/home/nishayadav/chirpsounder2_django/chirpsounder/webapp/app/static/lfm_va"
+    min_freq=0
+    max_freq=25000000.0
 
-    if conf.realtime:
-        while True:
-            fl=glob.glob("%s/lfm*.h5"%(conf.output_dir))
-            fl.sort()
 
-            filename = f"{conf.output_dir}/{filename}"
-            t_now=time.time()
-            # avoid last file to make sure we don't read and write simultaneously
-            for f in fl[0:(len(fl)-1)]:
-                try:
-                    t_file=float(re.search(".*-(1............).h5",f).group(1))
-                    # new enough file
-                    if t_now-t_file < 48*3600.0:
-                        plot_ionogram(conf,f)
-                    
-                except:
-                    print("error with %s"%(f))
-                    print(traceback.format_exc())
-            time.sleep(10)
-    else:
-        filename = f"{conf.output_dir}/{filename}"
-        plot_ionogram(conf,filename)
+    filename = f"{output_dir}/{filename}"
+    plot_ionogram(output_dir,max_range_extent ,min_range,max_range,manual_range_extent,minimum_analysis_frequency,manual_freq_extent,copy_to_server,copy_destination,station_name,min_freq,max_freq,maximum_analysis_frequency,filename)
                 
-            
+      
