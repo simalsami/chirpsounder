@@ -9,6 +9,7 @@ import psycopg2
 import glob
 from datetime import datetime, timedelta, timezone
 from .plot_ionograms import create_plot_ionograms
+from .update_tx_code import create_db_connection,get_virginia_lfm_ionograms
 
 # Create your views here.
 
@@ -72,52 +73,19 @@ def timestamp_to_datetime(timestamp):
     return dt
 
 
-def filter_ionograms(request, id):
-    data = Chripsounder.objects.filter(id=id).values()[0]
-    print(data)
-    if request.method == 'POST':
-        selected_date = request.POST['selected_date']
-        print(selected_date)
-        
-        x = os.path.exists('/home/nishayadav/Myprojects/lfm_va')
-        if not x:
-            filter_ionogram.creating_data_file(data, selected_date)
-    lfm_vir = "/home/nishayadav/chirpsounder2_django/chirpsounder/webapp/app/static/lfm_va/*"
-    files = glob.glob(lfm_vir)
-    h5_files = []
-    png_files = []
-    for file_name in files:
-        if file_name.endswith("h5"):
-            h5_files.append(file_name)
-        else:
-            png_files.append(file_name.split("/")[-1])
+def filter_ionograms(request, folder_name, id):
+    conn = create_db_connection()
+    data = Chripsounder.objects.filter(id=int(id)).values()[0]
+    files = list(get_virginia_lfm_ionograms(conn, folder_name))
+   
     
-    # files = [i.split('/')[-1] for i in files]
-
-    # print(h5_files)
-    print(png_files)
-    filter_data = []
-    for i in h5_files:
-        png_file = i.split("/")[-1]
-        # print(f'{png_file[0: -2]}png')
-
-        if f'{png_file[0: -2]}png' in png_files:
-            filter_data.append(
-            {'h5_file': i.split("/")[-1], 
-            'h5_png_file': f'{png_file[0: -2]}png',
-            'selected_date': timestamp_to_datetime(i.split("/")[-1].split("-")[2].split(".")[0])
-            }
-            )
-        else:
-            filter_data.append(
-            {'h5_file': i.split("/")[-1], 
-            'selected_date': timestamp_to_datetime(i.split("/")[-1].split("-")[2].split(".")[0])
-            }
-            )
-
-    files = enumerate(filter_data)
-    base_url = "/home/nishayadav/Myprojects/lfm_va"
-    return render(request, 'filter_ionogram.html', {"data": files, "name": data, "base_url": base_url})
+    print("files:-", len(files))
+    if len(files) > 0:
+        files = files
+    else:
+        filter_ionogram.creating_data_file(data, folder_name)
+    files = list(get_virginia_lfm_ionograms(conn, folder_name))
+    return render(request, 'filter_ionogram.html', {"data": files, "name": data, "date": folder_name})
 
 def edit_transmitter(request, id):
     data = Chripsounder.objects.filter(id = id)
@@ -214,7 +182,7 @@ def unfiltered_ionograms(request):
     print(users)
     return render(request, 'all-ionograms.html', {"users": users})
 
-def view_filtered_ionograms(request):
+def view_filtered_ionograms(request, id):
     lst = glob.glob(rootdir)
     lst = list(map(get_folder_name, lst))
     print(lst)
@@ -232,7 +200,7 @@ def view_filtered_ionograms(request):
         users = paginator.page(paginator.num_pages)
 
     print(users)
-    return render(request, 'view-filtered_ionogram.html', {"users": users})
+    return render(request, 'view-filtered_ionogram.html', {"users": users, "id": id})
 
 # def remove_path_from_ionograms(path):
 #     return {"folder_name": path.split("/")[-1]}
@@ -240,11 +208,7 @@ def view_filtered_ionograms(request):
 def view_unfiltered_ionograms(request, folder_name):
     rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
     png_files = []
-    lst = glob.glob(f"{rootdir}/{folder_name}/lfm*.png")
-
-
-
-    files = glob.glob(f"{rootdir}/{folder_name}/*")
+    files = glob.glob(f"{rootdir}/{folder_name}/lfm*")
     h5_files = []
     png_files = []
     for file_name in files:
@@ -287,4 +251,63 @@ def view_unfiltered_ionograms(request, folder_name):
     # print(png_files)
 
     return render(request, 'view-unfiltered_ionograms.html', {"data": files, "base_url": base_url, 'selected_date': folder_name})
+
+
+
+
+def search_by_codes(request):
+    if request.method == 'POST':
+        tx_code = request.POST['tx_code']
+        folder_name = request.POST['selected_date']
+        rx_code = request.POST['rx_code']
+
+        # conn = create_db_connection()
+        # data = Chripsounder.objects.filter(id=int(id)).values()[0]
+        # files = list(get_virginia_lfm_ionograms(conn, folder_name))
+
+    rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
+    png_files = []
+    files = glob.glob(f"{rootdir}/{folder_name}/lfm*")
+    h5_files = []
+    png_files = []
+    for file_name in files:
+        if file_name.endswith("h5"):
+            h5_files.append(file_name)
+        else:
+            png_files.append(file_name.split("/")[-1])
+    
+    # files = [i.split('/')[-1] for i in files]
+
+    # print(h5_files)
+    print(png_files)
+    filter_data = []
+    for i in h5_files:
+        png_file = i.split("/")[-1]
+        # print(f'{png_file[0: -2]}png')
+
+        if f'{png_file[0: -2]}png' in png_files:
+            filter_data.append(
+            {'h5_file': i.split("/")[-1], 
+            'h5_png_file': f'{png_file[0: -2]}png',
+            'selected_date': folder_name
+            }
+            )
+        else:
+            filter_data.append(
+            {'h5_file': i.split("/")[-1], 
+            'selected_date': folder_name
+            }
+            )
+
+    files = enumerate(filter_data)
+    base_url = "/home/nishayadav/Myprojects/lfm_va"
+
+
+    return render(request, 'view-unfiltered_ionograms.html', {"data": files, "base_url": base_url, 'selected_date': folder_name})
+
+        
+
+    return HttpResponse("hi")
+            
+
 

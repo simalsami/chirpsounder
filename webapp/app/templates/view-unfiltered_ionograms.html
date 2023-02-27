@@ -18,7 +18,40 @@
         <div class="col-md-8 offset-md-2">
           <h3 class="text-center Ionosonde-list">Unfiltered LFM files Associated to Transmitter</h3>
         </div>
-      </div>
+        
+
+        <div class="col-md-4 offset-md-4">
+            <form action="/search_by_codes" method="post">
+                {% csrf_token %}
+                <select class="form-select shadow-none" aria-label="Default select example" name="tx_code">
+                    <option selected>Choose TX Code</option>
+                    <option value="1">TX_CODE</option>
+                    <option value="2">CVAQ</option>
+                    <option value="3">Three</option>
+                </select>
+
+                <select class="form-select mt-2 shadow-none" aria-label="Default select example" name="rx_code">
+                    <option selected>Choose RX Code</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+                
+                <input type="hidden" name="selected_date" value="{{selected_date}}">
+                
+                               
+            </form>
+
+            <button type="submit" class="btn btn-info text-center shadow-none mt-2"> Search</button>
+               
+        </div>
+    
+
+        
+
+
+    </div>
 
     <div class="table-format">
         <table width="100%" class="table m-4">
@@ -36,7 +69,7 @@
                 {% for i, j in data %}
                 <tr class="text-center">
                     <td>{{i| add:"1"}}</td>
-                    <td>None</td>
+                    <td>CVA</td>
                     <td>W2NAF</td>
                     <td>{{j.selected_date}}</td>
                     <td><a href='/static/{{j.selected_date}}/{{j.h5_file}}' download>{{j.h5_file}}</a></td>

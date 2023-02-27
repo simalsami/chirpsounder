@@ -33,7 +33,7 @@ rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
 
 
 # file to be store all lfm files related to virginia
-lfm_vir = "/home/nishayadav/Myprojects/lfm_va"
+lfm_vir = "/home/nishayadav/chirpsounder2_django/chirpsounder/webapp/app/static/lfm_va/"
 par_vir = "/home/nishayadav/Myprojects/par_va"
 
 
@@ -69,6 +69,12 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
     # print("filename", f)
     file_name = f.split("/")[-1]
     ho = None
+    # filter_data = []
+
+    
+
+    
+
     if file_name.startswith("lfm"):
         if not file_name.endswith(".done"):
             # print("File name inside loop", f)
@@ -76,7 +82,6 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
                 ho = h5py.File(f, "r")
                 # print("par files ", f.startswith("par"))
                 t0 = float(n.copy(ho[("t0")]))
-                print("File name inside loop", f)
                 if not "id" in ho.keys():
                     return
                 cid = int(n.copy(ho[("id")]))  # ionosonde id
@@ -228,18 +233,16 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
 
                     print("dhfkjfksdhkfhdkhfkdfk...............aplit,", file_names)
                     # ipdb.set_trace()
-                    if file_names.startswith("lfm") and file_names.endswith("h5"):
+                    # if file_names.startswith("lfm") and file_names.endswith("h5"):
                         # creating and Saving VA associated LFM files
-                        if not os.path.exists(lfm_vir):
-                            os.mkdir(lfm_vir)
-                        shutil.copy(f, lfm_vir)
+                        # filename = f
                         # print("Print lfm copied...")
                         # print('ch1_inside=%d' % (ch1))
-                    elif file_names.startswith("par") and file_names.endswith("h5"):
-                        # code to write par file into seperate folder
-                        if not os.path.exists(par_vir):
-                            os.mkdir(par_vir)
-                        shutil.copy(f, par_vir)
+                    # elif file_names.startswith("par") and file_names.endswith("h5"):
+                    #     # code to write par file into seperate folder
+                    #     if os.path.exists(par_vir):
+                    #         os.mkdir(par_vir)
+                    #     shutil.copy(f, par_vir)
                         # print("Print par copied...")
                         # print('ch1_inside=%d' % (ch1))
 
@@ -250,13 +253,7 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
                     update_tx_code(connection, f)
                     # print('ch1_inside=%d' %(ch1))
                 
-            else:
-                if not os.path.exists(lfm_vir):
-                    os.mkdir(lfm_vir)
-                    shutil.copy(f, lfm_vir)
-                else:
-                    shutil.copy(f, lfm_vir)
-            return DataDict
+    return DataDict
 
 
 
@@ -275,7 +272,7 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
 def save_var(dirs1, DataDict):
     path1 = output_dir1 + '/' + dirs1 + '/' + dirs1[5:10] + 'k.data'
     print(path1)
-    # ipdb.set_trace()
+    # ipdb.set_trace()ta
     with open(path1, 'wb') as f:
         pickle.dump(DataDict, f)
     with open(path1, 'rb') as f:
@@ -289,6 +286,8 @@ def save_var(dirs1, DataDict):
 
 def creating_data_file(data, folder_name):
 
+    # filter_data = []
+
     # filter ionograms for range of entered dates
     # date format "yyyy-mm-dd"
     # 2023-01-27
@@ -300,6 +299,8 @@ def creating_data_file(data, folder_name):
     startDate = datetime.date(year, month, day)
     endDate = datetime.date(year, month, day)
     deltaDate = datetime.timedelta(days=1)
+
+    final_result = False
 
     while startDate <= endDate:
         for j in range(0, len(dirs)):
@@ -328,13 +329,23 @@ def creating_data_file(data, folder_name):
                 DataDict = {}
                 DataDict = {'freqlist': freqlist}
                 DataDict['ch1'] = ch1
+                # if os.path.exists(lfm_vir):
+                #     shutil.rmtree(lfm_vir)
+                # else:
+                #     os.mkdir(lfm_vir)
+
+                
 
                 if len(fl) > 1:
                     for jf, f in enumerate(fl):
-                        print('jf=%d' % (jf))
+                        # print('jf=%d' % (jf))
                         #print('ch1=%d' %(ch1))
                         filter_ionograms(dirs1, data, f, DataDict)
+                        
 
-                    if DataDict['ch1'] > 1:
-                        save_var(dirs1, DataDict)
+                    # if DataDict['ch1'] > 1:
+                    #     save_var(dirs1, DataDict)
+
+                    
         startDate = startDate + deltaDate
+    # return final_result

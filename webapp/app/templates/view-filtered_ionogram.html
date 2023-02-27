@@ -18,7 +18,7 @@
   {% include 'menu.html' %}
   <div class="row mt-5">
     <div class="col-md-6 offset-md-3">
-      <h3 class="text-center Ionosonde-list">Ionosounde Locations</h3>
+      <h3 class="text-center Ionosonde-list">Ionosonde Locations</h3>
     </div>
   </div>
   <div class="table-format">
@@ -36,7 +36,7 @@
         <tr class="text-center">
           
           <td>{{i.folder_name}}</td>
-          <td><a href="{% url 'view_unfiltered_ionograms' i.folder_name %}" >View Ionograms</a></td>
+          <td><a href="{% url 'ionograms_filter' i.folder_name id %}" >View Ionograms</a></td>
         </tr>
         {% endfor %}
         

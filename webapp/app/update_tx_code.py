@@ -44,3 +44,15 @@ def update_tx_code(conn, file):
 
         conn.commit()
         print("Done...")
+
+
+def get_virginia_lfm_ionograms(conn, folder_name):
+    query = f"select lfm_filename from table_lfm_file tlf where tlf.tx_cva_rx_w2naf is true and lfm_filename like '%{folder_name}%'"
+
+    print(query)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    data = [i[0] for i in data]
+    data = enumerate(data)
+    return data

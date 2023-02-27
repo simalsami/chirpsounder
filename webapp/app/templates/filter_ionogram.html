@@ -33,19 +33,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for i, j in data %}
+                {% for sr_no, i in data %}
                 <tr class="text-center">
-                    <td>{{i| add:"1"}}</td>
+                    <td>{{sr_no| add:"1"}}</td>
                     <td>{{name.tx_code}}</td>
                     <td>{{name.receiver_code}}</td>
-                    <td>{{j.selected_date}}</td>
-                    <td><a href='/static/lfm_va/{{j.h5_file}}' download>{{j.h5_file}}</a></td>
-                    {% if j.h5_file and j.h5_png_file %}
-                    <td><a href="{% url 'view-ionograms' j.h5_png_file %}" class=""><img src="/static/lfm_va/{{j.h5_png_file}}" alt="ionogram" width="50px" height="50px"></a></td>
-                    {% else %}
-                    <td><a href="{% url 'create_ionograms' j.h5_file %}" class="btn custom-button">Regenerate{% bs_icon 'arrow-clockwise' %}</a></td>
-                    {% endif %}
-                </tr>
+                    <td>{{date}}</td>
+                    <td><a href="/static/{{i}}" class="">{{i|slice:"11:"}}</a></td>
+                    <td><img src="/static/images/newiono.png" alt="" width="50" height="50"></td>
+                    
+                    
+                </tr> 
                 {% endfor %}
 
             </tbody>
