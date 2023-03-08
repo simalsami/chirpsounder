@@ -71,6 +71,8 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
     ho = None
     # filter_data = []
 
+    print(data)
+
     
 
     
@@ -228,10 +230,9 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
                     DataDict['Time'] = T03
                     DataDict['range_gates3'] = range_gates3
                     DataDict['ch1'] = ch1
-                    print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", f)
                     file_names = f.split("/")[-1]
 
-                    print("dhfkjfksdhkfhdkhfkdfk...............aplit,", file_names)
+
                     # ipdb.set_trace()
                     # if file_names.startswith("lfm") and file_names.endswith("h5"):
                         # creating and Saving VA associated LFM files
@@ -250,7 +251,7 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
                     # print("LFM file is:-", f)
                     connection = create_db_connection()
 
-                    update_tx_code(connection, f)
+                    update_tx_code(connection, f, data)
                     # print('ch1_inside=%d' %(ch1))
                 
     return DataDict

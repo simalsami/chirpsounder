@@ -18,7 +18,47 @@
   {% include 'menu.html' %}
   <div class="row mt-5">
     <div class="col-md-6 offset-md-3">
-      <h3 class="text-center Ionosonde-list">Ionosounde Locations</h3>
+      <h3 class="text-center Ionosonde-list mb-5">Ionosounde Locations</h3>
+      <form action="/search_by_codes" method="post">
+        <div class="row">
+            <div class="col-4 offset-md-2 md-5">
+
+                {% csrf_token %}
+                <select class="form-select shadow-none" aria-label="Default select example" name="tx_code" required>
+                    <option selected>Choose TX Code</option>
+                    <option value="TX_CODE">TX_CODE</option>
+                    <option value="CVAQ">CVAQ</option>
+                    <option value="PRC">PRC</option>
+                </select>
+
+                <select class="form-select mt-2 shadow-none" aria-label="Default select example" name="rx_code">
+                    <option selected>Choose RX Code</option>
+                    <option value="1">W2NAF</option>
+
+                </select>
+
+
+                <input type="hidden" name="selected_date" value="{{selected_date}}">
+
+
+            </div>
+            <div class="col-4">
+
+                <label for="exampleFormControlInput1" class="form-label">Start Date:</label>
+                <input type="date" class="form-control shadow-none" name="start_date" placeholder="Start Date" required>
+
+
+
+                <div class="mb-5">
+                    <label for="exampleFormControlInput1" class="form-label">End Date:</label>
+                    <input type="date" class="form-control shadow-none" name="end_date" placeholder="End Date" required>
+                </div>
+
+                <button type="submit" class="btn btn-info text-center shadow-none mt-2"> Search</button>
+                <button type="reset" class="btn btn-info text-center shadow-none mt-2"> Reset</button>
+            </div>
+        </div>
+    </form>
     </div>
   </div>
   <div class="table-format">

@@ -9,7 +9,7 @@ import psycopg2
 import glob
 from datetime import datetime, timedelta, timezone
 from .plot_ionograms import create_plot_ionograms
-from .update_tx_code import create_db_connection,get_virginia_lfm_ionograms
+from .update_tx_code import create_db_connection,get_virginia_lfm_ionograms, get_unfiltered_ionograms, get_search_data
 
 # Create your views here.
 
@@ -206,41 +206,42 @@ def view_filtered_ionograms(request, id):
 #     return {"folder_name": path.split("/")[-1]}
 
 def view_unfiltered_ionograms(request, folder_name):
-    rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
-    png_files = []
-    files = glob.glob(f"{rootdir}/{folder_name}/lfm*")
-    h5_files = []
-    png_files = []
-    for file_name in files:
-        if file_name.endswith("h5"):
-            h5_files.append(file_name)
-        else:
-            png_files.append(file_name.split("/")[-1])
+    # rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
+
+    # png_files = []
+    # files = glob.glob(f"{rootdir}/{folder_name}/lfm*")
+    # h5_files = []
+    # png_files = []
+    # for file_name in files:
+    #     if file_name.endswith("h5"):
+    #         h5_files.append(file_name)
+    #     else:
+    #         png_files.append(file_name.split("/")[-1])
     
-    # files = [i.split('/')[-1] for i in files]
+    # # files = [i.split('/')[-1] for i in files]
 
-    # print(h5_files)
-    print(png_files)
-    filter_data = []
-    for i in h5_files:
-        png_file = i.split("/")[-1]
-        # print(f'{png_file[0: -2]}png')
+    # # print(h5_files)
+    # print(png_files)
+    # filter_data = []
+    # for i in h5_files:
+    #     png_file = i.split("/")[-1]
+    #     # print(f'{png_file[0: -2]}png')
 
-        if f'{png_file[0: -2]}png' in png_files:
-            filter_data.append(
-            {'h5_file': i.split("/")[-1], 
-            'h5_png_file': f'{png_file[0: -2]}png',
-            'selected_date': folder_name
-            }
-            )
-        else:
-            filter_data.append(
-            {'h5_file': i.split("/")[-1], 
-            'selected_date': folder_name
-            }
-            )
+    #     if f'{png_file[0: -2]}png' in png_files:
+    #         filter_data.append(
+    #         {'h5_file': i.split("/")[-1], 
+    #         'h5_png_file': f'{png_file[0: -2]}png',
+    #         'selected_date': folder_name
+    #         }
+    #         )
+    #     else:
+    #         filter_data.append(
+    #         {'h5_file': i.split("/")[-1], 
+    #         'selected_date': folder_name
+    #         }
+    #         )
 
-    files = enumerate(filter_data)
+    # files = enumerate(filter_data)
     base_url = "/home/nishayadav/Myprojects/lfm_va"
 
     
@@ -250,64 +251,81 @@ def view_unfiltered_ionograms(request, folder_name):
 
     # print(png_files)
 
-    return render(request, 'view-unfiltered_ionograms.html', {"data": files, "base_url": base_url, 'selected_date': folder_name})
+
+
+    conn = create_db_connection()
+    data = get_unfiltered_ionograms(conn, folder_name)
+    print("data", data)
+
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(data, 40)
+    try:
+        data = paginator.page(page)
+    except PageNotAnInteger:
+        data = paginator.page(1)
+    except EmptyPage:
+        data = paginator.page(paginator.num_pages)
+
+
+    return render(request, 'view-unfiltered_ionograms.html', {"data": data, "base_url": base_url, 'selected_date': folder_name})
 
 
 
 
 def search_by_codes(request):
+    # data = []
     if request.method == 'POST':
         tx_code = request.POST['tx_code']
-        folder_name = request.POST['selected_date']
-        rx_code = request.POST['rx_code']
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
 
-        # conn = create_db_connection()
-        # data = Chripsounder.objects.filter(id=int(id)).values()[0]
-        # files = list(get_virginia_lfm_ionograms(conn, folder_name))
+        base_url = "/home/nishayadav/Myprojects/lfm_va"
 
-    rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
-    png_files = []
-    files = glob.glob(f"{rootdir}/{folder_name}/lfm*")
-    h5_files = []
-    png_files = []
-    for file_name in files:
-        if file_name.endswith("h5"):
-            h5_files.append(file_name)
-        else:
-            png_files.append(file_name.split("/")[-1])
+        conn = create_db_connection()
+        data = get_search_data(conn, tx_code, start_date, end_date)
+
+
+        filter_data = {}
+
+        if tx_code != 'Choose TX Code' and start_date and end_date:
+            filter_data.update(
+                {
+                "tx_code": tx_code,
+                "start_date": start_date,
+                "end_date": end_date
+
+
+                }
+            )
+
+        elif start_date and end_date:
+            filter_data.update(
+                {
+                "start_date": start_date,
+                "end_date": end_date
+
+
+                }
+            )
+
+        elif tx_code != 'Choose TX Code':
+            filter_data.update(
+                {
+                "tx_code": tx_code
+
+                }
+            )
+ 
+    # print("folder name:- ")
+    return render(request, 'view-unfiltered_ionograms.html', {"data": data, "base_url": base_url, "filtered_data": filter_data})
+
+    # print(data)
+
     
-    # files = [i.split('/')[-1] for i in files]
-
-    # print(h5_files)
-    print(png_files)
-    filter_data = []
-    for i in h5_files:
-        png_file = i.split("/")[-1]
-        # print(f'{png_file[0: -2]}png')
-
-        if f'{png_file[0: -2]}png' in png_files:
-            filter_data.append(
-            {'h5_file': i.split("/")[-1], 
-            'h5_png_file': f'{png_file[0: -2]}png',
-            'selected_date': folder_name
-            }
-            )
-        else:
-            filter_data.append(
-            {'h5_file': i.split("/")[-1], 
-            'selected_date': folder_name
-            }
-            )
-
-    files = enumerate(filter_data)
-    base_url = "/home/nishayadav/Myprojects/lfm_va"
-
-
-    return render(request, 'view-unfiltered_ionograms.html', {"data": files, "base_url": base_url, 'selected_date': folder_name})
-
+    # url = f'view_unfiltered_ionograms/{folder_name}'
+    # return redirect(url, data=data, base_url=base_url, selected_date=folder_name)
         
-
-    return HttpResponse("hi")
-            
 
 
