@@ -1,7 +1,7 @@
+2022-2023 Nisha Yadav
+
 # chirpsounder
 
-
-README file: To make the project accessible and clear to others, A README file that contains project details would look like this:-
 
 **Web-Based Application for the Visualization and Analysis of Ionogram Data Observed by​ GNU Chirpsounder2**
 **Goal: **
