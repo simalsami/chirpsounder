@@ -18,13 +18,13 @@ The focus of the system is to develop a web-based application for the visualizat
 2. Set up PostgreSql database.
 3. Clone project from github: https://github.com/Nisha-Yadav-1/chirpsounder.git
 4. Steps to run application
-  1. Attach the drive to the computer.
-  2. Open the terminal
-  3. Run git clone https://github.com/Nisha-Yadav-1/chirpsounder.git
-  4. run cd chirpsounder
-  5. Open project in any IDE. 
-  6. run project
-  7. Navigate to http://127.0.0.1:8000/
+  - Attach the drive to the computer.
+  - Open the terminal
+  - Run git clone https://github.com/Nisha-Yadav-1/chirpsounder.git
+  - run cd chirpsounder
+  - Open project in any IDE. 
+  - run project
+  - Navigate to http://127.0.0.1:8000/
 5. The home screen will look like this, click on add transmitter button, provide all the information, and hit submit.
 6. Go to the admin page, click on add receiver button, provide all the information, and hit submit.
 7. Again, go to the Home page and, click on the “filtered ionograms” button, it will filter the ionograms.
