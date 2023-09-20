@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import glob
 import h5py
 import scipy.constants as c
-from .chirp_config import *
 from .chirp_det import *
 import sys
 import os
@@ -39,7 +38,7 @@ def plot_ionogram(output_dir,max_range_extent ,min_range,max_range,manual_range_
         ho.close()
         return
     
-    print("Plotting %s rate %1.2f (kHz/s) t0 %1.5f (unix)"%(f,float(n.copy(ho[("rate")]))/1e3,float(n.copy(ho[("t0")]))))
+    # print("Plotting %s rate %1.2f (kHz/s) t0 %1.5f (unix)"%(f,float(n.copy(ho[("rate")]))/1e3,float(n.copy(ho[("t0")]))))
     S=n.copy(n.array(ho[("S")],dtype=n.float64))          # ionogram frequency-range
     freqs=n.copy(ho[("freqs")])  # frequency bins
     ranges=n.copy(ho[("ranges")])  # range gates
@@ -98,7 +97,6 @@ def plot_ionogram(output_dir,max_range_extent ,min_range,max_range,manual_range_
 
 
 def create_plot_ionograms(filename):
-    # conf=chirp_config()
     station_name="station_name"
     max_range_extent=2000000.0
     min_range=200000.0

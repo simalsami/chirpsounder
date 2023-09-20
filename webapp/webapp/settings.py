@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-g12-9s2b(2$(=*ey#8=x2g6p)@evp#%40h9j6j*25!$76*70h#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,8 +38,33 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_bootstrap_icons",
-    "app"
+    "app",
+    "rest_framework",
+    "django.views.debug"
+
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
+
+
+
+
+
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -80,7 +105,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'h5db', 
         'USER': 'postgres', 
-        'PASSWORD': 'Welcome@123',
+        'PASSWORD': 'Password@123',
         'HOST': '127.0.0.1', 
         'PORT': '5432',
     }
@@ -121,15 +146,43 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 CSS_URL = "css/"
 
-
+# print(BASE_DIR)
 STATICFILES_DIRS = [
     BASE_DIR / "static",
+    
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+LOGGING = {
+    'version': 1,
+    # The version number of our log
+    'disable_existing_loggers': False,
+    # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
+    # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'info.log',
+        },
+    },
+    # A logger for WARNING which has a handler called 'file'. A logger can have multiple handler
+    'loggers': {
+       # notice the blank '', Usually you would put built in loggers like django or root here based on your needs
+        '': {
+            'handlers': ['file'], #notice how file variable is called in handler which has been defined above
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

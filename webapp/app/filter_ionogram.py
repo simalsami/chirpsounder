@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#Extends Dr. Dev Joshi's static method to filter Viginia Cheasapeake Virginia to the extent that is now filtering any transmitter information accross the world by giving dynamic value from the UI only.
 
 # Save files in each of the folders using pickle (multi-frequency) and later
 # load the files to make the plots through another script.
@@ -9,7 +10,8 @@
 # lock or other technical issues, (ii) imperfect algorithm which we have now !
 
 ##
-
+from django.conf import settings
+import logging
 import pickle
 from numpy import unravel_index
 import datetime
@@ -29,12 +31,8 @@ import ipdb
 from .update_tx_code import create_db_connection, update_tx_code
 
 # Folder which has lfm files.
-rootdir = '/media/nishayadav/Seagate Backup Plus Drive/chirp'
+rootdir = '/media/ssami/Expansion/chirp'
 
-
-# file to be store all lfm files related to virginia
-lfm_vir = "/home/nishayadav/chirpsounder2_django/chirpsounder/webapp/app/static/lfm_va/"
-par_vir = "/home/nishayadav/Myprojects/par_va"
 
 
 # All folders (within the rootdir) named by days of the calendar which has the
@@ -47,7 +45,7 @@ dirs = sorted(os.listdir(rootdir))
 #'dated-folders'. dirs = dirs[3:-1]
 
 # folder where I want to save my data
-output_dir1 = "/home/nishayadav/Myprojects/virginia"
+output_dir1 = "/home/ssami/Myprojects/virginia"
 
 freqlist = [60, 80, 100, 120, 140, 160]
 
@@ -62,20 +60,13 @@ def k_largest_index_argsort(S, k):
 # Parameters         :               Dirs1, data, files, DataDict
 
 
-
+logger = logging.getLogger(__name__)
 
 
 def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
-    # print("filename", f)
     file_name = f.split("/")[-1]
     ho = None
-    # filter_data = []
 
-    print(data)
-
-    
-
-    
 
     if file_name.startswith("lfm"):
         if not file_name.endswith(".done"):
@@ -163,22 +154,11 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
                 # filters are applied here.
                 pos1 = n.argwhere((arr1 > int(data['chriprate'])) & (
                     arr1 < data['first_hop_range_one']))
-                # ipdb.set_trace()
                 ch1 = DataDict['ch1']
 
                 if ((Rate == int(data['chriprate'])) and (data['first_hop_range_one'] < r0 < data['first_hop_range_two'])) | ((Rate == int(data['chriprate'])) and
                                                                                                                               (data['second_hop_range_one'] < r0 < data['second_hop_range_two']) and (len(pos1) > 0)):
-                    print('yes')
-                    # ipdb.set_trace()
-                    # if jf == 534:
-                    #    ipdb.set_trace()
-                    # if range_gates.shape[0] == DataDict['range_gates2'].shape[0]:
-                    #    range_gates2 = range_gates
-                    #    DataDict['range_gates2'] = range_gates
-                    # else:
-                    #    range_gates2 = DataDict['range_gates2']
-                    #    DataDict['range_gates2'] = DataDict['range_gates2']
-
+                    
                     ch1 += 1
                     if ch1 == 1:
 
@@ -233,27 +213,13 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
                     file_names = f.split("/")[-1]
 
 
-                    # ipdb.set_trace()
-                    # if file_names.startswith("lfm") and file_names.endswith("h5"):
-                        # creating and Saving VA associated LFM files
-                        # filename = f
-                        # print("Print lfm copied...")
-                        # print('ch1_inside=%d' % (ch1))
-                    # elif file_names.startswith("par") and file_names.endswith("h5"):
-                    #     # code to write par file into seperate folder
-                    #     if os.path.exists(par_vir):
-                    #         os.mkdir(par_vir)
-                    #     shutil.copy(f, par_vir)
-                        # print("Print par copied...")
-                        # print('ch1_inside=%d' % (ch1))
-
                     # code to update TX_Code for virgina transmitter
-                    # print("LFM file is:-", f)
                     connection = create_db_connection()
-
-                    update_tx_code(connection, f, data)
-                    # print('ch1_inside=%d' %(ch1))
-                
+                    logger.info(file_names)
+                    update_tx_code(connection, f, data, True)
+                else:
+                    connection = create_db_connection()
+                    update_tx_code(connection, f, data, False)
     return DataDict
 
 
@@ -272,7 +238,7 @@ def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
 
 def save_var(dirs1, DataDict):
     path1 = output_dir1 + '/' + dirs1 + '/' + dirs1[5:10] + 'k.data'
-    print(path1)
+    # print(path1)
     # ipdb.set_trace()ta
     with open(path1, 'wb') as f:
         pickle.dump(DataDict, f)
@@ -288,11 +254,12 @@ def save_var(dirs1, DataDict):
 def creating_data_file(data, folder_name):
 
     # filter_data = []
+    # os.remove(os.path.join(settings.BASE_DIR, 'info.log'))
 
     # filter ionograms for range of entered dates
     # date format "yyyy-mm-dd"
     # 2023-01-27
-    print("Date:- ", folder_name)
+    # print("Date:- ", folder_name)
     folder_name = folder_name.split("-")
     year = int(folder_name[0])
     month = int(folder_name[1])
@@ -302,6 +269,9 @@ def creating_data_file(data, folder_name):
     deltaDate = datetime.timedelta(days=1)
 
     final_result = False
+
+    #log_file = open("test.log", "w")
+    log_file = open("info.log", "w")
 
     while startDate <= endDate:
         for j in range(0, len(dirs)):
@@ -321,7 +291,7 @@ def creating_data_file(data, folder_name):
 
                 # path goes into each-day-folder within the rootdir
                 path = os.path.join(rootdir, dirs1)
-                print(dirs1)
+                # print(dirs1)
                 os.chdir(path)
                 fl = glob.glob("%s/*" % (path))
                 fl.sort()
@@ -339,14 +309,18 @@ def creating_data_file(data, folder_name):
 
                 if len(fl) > 1:
                     for jf, f in enumerate(fl):
-                        # print('jf=%d' % (jf))
-                        #print('ch1=%d' %(ch1))
+                        # log_file.write('jf=%d\n' % (jf))
+                        # log_file.write('ch1=%d\n' %(ch1))
+
+
                         filter_ionograms(dirs1, data, f, DataDict)
                         
 
                     # if DataDict['ch1'] > 1:
                     #     save_var(dirs1, DataDict)
 
+                    
+        log_file.close()
                     
         startDate = startDate + deltaDate
     # return final_result

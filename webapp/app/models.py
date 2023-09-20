@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+#author name              :               Nisha Yadav
 
 
 class Chripsounder(models.Model):
@@ -17,6 +18,7 @@ class Chripsounder(models.Model):
     second_hop_range_two = models.IntegerField(default=0)
     # this is receiver
     receiver_code = models.CharField('Receiver Code', max_length=100)
+    deleted = models.BooleanField(default=False)
 
 
     class Meta:
@@ -36,6 +38,7 @@ class ReceiverInfos(models.Model):
     receiver_location = models.CharField('Receiver Location:-', max_length=100)
     receiver_lat = models.CharField('Receiver Lat:-', max_length=100)
     receiver_long = models.CharField('Receiver Long:-', max_length=100)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "ReceiverInfo"

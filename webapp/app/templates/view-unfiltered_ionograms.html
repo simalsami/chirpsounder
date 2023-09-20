@@ -20,6 +20,7 @@
             <h3 class="text-center Ionosonde-list">Unfiltered LFM files Associated to Transmitter</h3>
         </div>
     </div>
+    
     <form action="/search_by_codes" method="post">
         <div class="row">
             <div class="col-4 offset-md-2">
@@ -100,7 +101,6 @@
                     <td>{{i.sr_no}}</td>
                     <td>{{i.tx_code}}</td>
                     <td>W2NAF</td>
-
                     {% if selected_date %}
                     <td>{{selected_date}}</td>
                     {% else %}
@@ -108,13 +108,33 @@
                     {% endif %}
                     <td><a href='/static/{{selected_date}}/{{i.filename}}' download>{{i.filename}}</a>
                     </td>
+
+                    {% if selected_date %}
                     <td>
-                        <a href="/static/{{i.selected_date}}/{{i.png_filename}}">
+                        <a href="/view-ionograms/{{selected_date}}/{{i.filename|slice:':-2'|add:'png'}}/{{id}}">
 
-                            <img src="/static/images/newiono.png" alt="" width="50" height="50">
-
+                            <img src="/static/images/thumbnail.png" alt="" width="50" height="50">
+                            
                         </a>
                     </td>
+
+
+                    {% else %}
+                    <td>
+                        <!-- <a href="/static/{{i.selected_date}}/{{i.png_filename}}">
+
+                            <img src="/static/images/thumbnail.png" alt="" width="50" height="50">
+
+                        </a> -->
+                        <a href="/view-ionograms/{{i.selected_date}}/{{i.png_filename}}/{{id}}">
+
+                            <img src="/static/images/thumbnail.png" alt="" width="50" height="50">
+
+                        </a>
+
+                        
+                    </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
                
@@ -127,37 +147,6 @@
         <h1 class="text-center mt-5">No Data Found</h1>
         {% endif %}
     </div>
-
-
-    <!-- <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-8 offset-xl-2">
-                <nav aria-label="Page navigation example text-center">
-                    {% if data.has_other_pages %}
-                    <ul class="pagination">
-                      {% if data.has_previous %}
-                      <li class="page-item"><a class="page-link" href="?page={{ data.previous_page_number }}">&laquo;</a></li>
-                      {% else %}
-                      <li class="disabled" class="page-items"><span class="page-link">&laquo;</span></li>
-                      {% endif %}
-                      {% for i in data.paginator.page_range %}
-                      {% if data.number == i %}
-                      <li class="active" class="page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span></li>
-                      {% else %}
-                      <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                      {% endif %}
-                      {% endfor %}
-                      {% if data.has_next %}
-                      <li class="page-item"><a class="page-link" href="?page={{ data.next_page_number }}">&raquo;</a></li>
-                      {% else %}
-                      <li class="disabled" class="page-item"><span class="page-link">&raquo;</span></li>
-                      {% endif %}
-                    </ul>
-                    {% endif %}
-                    </nav>
-            </div>
-        </div>
-    </div> -->
 
 
 
