@@ -33,7 +33,7 @@ urlpatterns = [
     path("log", views.loginfo, name='loginfo'),
     path("create_ionograms/<str:filename>", views.create_ionograms, name='create_ionograms'),
     
-    path("view_unfiltered_ionograms/<str:folder_name>", views.view_unfiltered_ionograms, name='view_unfiltered_ionograms'),
+    path("view_unfiltered_ionograms/<str:folder_name>/", views.view_unfiltered_ionograms, name='view_unfiltered_ionograms'),
     path("search_by_codes", views.search_by_codes, name='search_by_codes'),
     path("ionograms-summary/<str:tx_code>/<int:id>", views.total_number_ionograms, name='total_no_ionograms'),
     path("total-filtered-ionograms/<str:flag>/<int:id>", views.ionograms_details_from_summary, name='ionograms_details_from_summary'),

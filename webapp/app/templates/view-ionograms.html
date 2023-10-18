@@ -9,6 +9,11 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'css/home.css' %}">
         <script src="{% static 'js/index.js' %}"></script>  
+        <script>
+          $(document).ready(function () {
+            $('#carouselExampleControls').carousel();
+          });
+        </script>
         <style>
           .carousel-control-prev, .carousel-control-next {
             top: auto;
@@ -39,7 +44,7 @@
 
             {% endfor %}
             <div class="carousel-item active">
-              <img class="d-block w-80" src="/static/{{folder_name}}/{{filename}}" alt="Second slide">
+              <img class="d-block w-80" src="/static/{{folder_name}}/{{filename}}/" alt="Second slide">
             </div>
 
             {% for i in for_next %}
@@ -59,7 +64,8 @@
             <span class="carousel-control-next" aria-hidden="true"></span>
             <span class="sr-only btn btn-info">Next</span>
           </a>
-        </div>
+        </div> 
+        
 
       </center>
     </div>

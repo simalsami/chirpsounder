@@ -40,15 +40,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for entry in data %}
+                {% for sr_no, i in data %}
                 <tr class="text-center">
-                    <td>{{entry.inx| add:"1"}}</td>
+                    <td>{{sr_no| add:"1"}}</td>
                     <td>{{name.tx_code}}</td>
                     <td>{{name.receiver_code}}</td>
-                    <td>{{entry.dt}}</td>
-                    <td><a href="/static/{{entry.fname}}" class="">{{entry.fname}}</a></td>
-                    <td><a href="/view-ionograms/{{date}}/{{entry.fname|slice:':-2'|add:'png'}}/{{id}}">
-                            <img src="/static/{{date}}/{{entry.fname|slice:':-2'|add:'png'}}" alt="ionogram" width="50" height="50">
+                    <td>{{dt}}</td>
+                    <td><a href="/static/{{i}}" class="">{{i}}</a></td>
+                    <td><a href="/view-ionograms/{{date}}/{{i|slice:':-2'|add:'png'}}/{{id}}">
+                            <img src="/static/{{date}}/{{i|slice:':-2'|add:'png'}}" alt="ionogram" width="50" height="50">
                         </a></td>
                 </tr>
                 {% endfor %}

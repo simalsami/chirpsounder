@@ -82,40 +82,72 @@
     </form>
     <div class="table-format">
         {% if data %}
-        
-<table width="100%" class="table m-4">
-    <thead class="table-light table-bordered">
-        <tr class="text-center">
-            <th scope="col">Nr</th>
-            <th scope="col">TX Code</th>
-            <th scope="col">RX Code</th>
-            <th scope="col">Datetime[UT]</th>
-            <th scope="col">Name of LFM files</th>
-            <th scope="col">Ionograms Thumbnail</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in data %}
-            <tr class="text-center">
-                <td>{{ item.inx }}</td>
-                <td>{{ item.fname }}</td>
-                <td>W2NAF</td>
-                <td>{{ item.dt|date:"Y-m-d H:i:s" }}</td>
-                <td>
-                    <a href='/static/{{ item.fname }}' download>{{ item.fname }}</a>
-                </td>
-                <td>
-                    <a href="/view-ionograms/{{ item.dt|date:"Y-m-d" }}/{{ item.fname }}/{{ id }}">
-                        <img src="/static/images/thumbnail.png" alt="" width="50" height="50">
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-    <h1 class="text-center mt-5">No Data Found</h1>
-{% endif %}
+        <table width="100%" class="table m-4">
+            <thead class="table-light table-bordered">
+                <tr class="text-center">
+                    <th scope="col">Nr</th>
+                    <th scope="col">TX Code</th>
+                    <th scope="col">RX Code</th>
+                    <th scope="col">Datetime[UT]</th>
+                    <th scope="col">Name of LFM files</th>
+                    <th scope="col">Ionograms Thumbnail</th>
+                </tr>
+            </thead>
+            
+                
+                <tbody></tbody>
+                {% for i in data %}
+                <tr class="text-center">
+                    <td>{{i.sr_no}}</td>
+                    <td>{{i.tx_code}}</td>
+                    <td>W2NAF</td>
+                    {% if selected_date %}
+                    <td>{{selected_date}}</td>
+                    {% else %}
+                    <td>{{i.selected_date}}</td>
+                    {% endif %}
+                    <td><a href='/static/{{selected_date}}/{{i.filename}}' download>{{i.filename}}</a>
+                    </td>
+
+                    {% if selected_date %}
+                    <td>
+                        <a href="/view-ionograms/{{selected_date}}/{{i.filename}}/{{id}}"> 
+                      <!-- <a href="/view-ionograms/{{selected_date}}/{{i.filename}}/{{id}}"> --> 
+                            <img src="/static/images/thumbnail.png" alt="" width="50" height="50">
+                            
+                        </a>
+                    </td>
+
+
+                    {% else %}
+                    <td>
+                        <!-- <a href="/static/{{i.selected_date}}/{{i.png_filename}}">
+
+                            <img src="/static/images/thumbnail.png" alt="" width="50" height="50">
+
+                        </a> -->
+                        <a href="/view-ionograms/{{i.selected_date}}/{{i.png_filename}}/{{id}}">
+
+                            <img src="/static/{{i.selected_date}}/{{i.png_filename}}" alt="" width="50" height="50">
+
+                        </a>
+
+                        
+                    </td>
+                    {% endif %} 
+
+                </tr>
+                {% endfor %}
+               
+
+            </tbody>
+
+
+        </table>
+        {% else %}
+        <h1 class="text-center mt-5">No Data Found</h1>
+        {% endif %}
+    </div>
 
 
 

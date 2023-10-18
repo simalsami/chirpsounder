@@ -52,7 +52,9 @@ def get_lfm_ionograms(conn, folder_name):
 
 
 # All the filtered ionograms
+   
 def get_unfiltered_ionograms(conn, folder_name):
+    
     query = f"select lfm_filename, tx_code_w2naf from table_lfm_file tlf where tlf. lfm_file_path like '%{folder_name}%'"
     unfiltered_data = []
     cursor = conn.cursor()

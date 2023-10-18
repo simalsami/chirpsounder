@@ -405,27 +405,19 @@ def view_selected_data(request):
 
 
 
-def view_unfiltered_ionograms(request, folder_name):
+def view_unfiltered_ionograms(request, folder_name, id=2):
     conn = create_db_connection()
-    files = list(get_unfiltered_ionograms(conn, folder_name))
-
-    dts = []
-    for inx, fname in files:
-        # Extract the UTC timestamp from the filename
-        timestamp = int(fname.split("-")[2].split(".")[0])
-        
-        # Convert the timestamp to UTC datetime
-        dt = timestamp_to_datetime(timestamp) 
-
-        dts.append(dt)
-
-    entries = []
-    for (inx, fname), dt in zip(files, dts):
-        tmp = {'inx': inx, 'fname': fname, 'dt': dt}
-        entries.append(tmp)
-
-    return render(request, 'view-unfiltered_ionograms.html', {"data": entries, "name": folder_name})
-
+    data = get_unfiltered_ionograms(conn, folder_name)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(data, 40)
+    try:
+        data = paginator.page(page)
+    except PageNotAnInteger:
+        data = paginator.page(1)
+    except EmptyPage:
+        data = paginator.page(paginator.num_pages)
+    
+    return render(request, 'view-unfiltered_ionograms.html', {"data": data, 'selected_date': folder_name, 'id':id})
   
 
 def search_by_codes(request):
