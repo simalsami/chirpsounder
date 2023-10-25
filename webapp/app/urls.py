@@ -5,14 +5,14 @@ from . import views
 urlpatterns = [
    
     path("", views.homepage, name='homepage'),
-    path("unfilter_ionograms/", views.unfiltered_ionograms, name='unfiltered_ionograms'),
+    # path("unfilter_ionograms/", views.unfiltered_ionograms, name='unfiltered_ionograms'),
     path("unfilter_ionograms/<str:tx_code>/<int:id>", views.filter_ionograms_by_tx_code,name='unfiltered_ionograms'),
     path("view_ionograms_by_tx_code/<str:tx_code>/<int:id>", views.view_ionograms_by_tx_code,name='view_ionograms_by_tx_code'),
     path("view_filtered_ionograms/<int:id>", views.view_filtered_ionograms, name='view_filtered_ionograms'),
     path("view_selected_data", views.view_selected_data, name='view_selected_data'),
 
     # api
-    path("api/filter-ionograms/<str:folder_name>/<int:id>", views.filter_ionograms_api, name='ionograms_filter'),
+    path("api/list-ionograms/<str:folder_name>/<int:id>", views.filter_ionograms_api, name='ionograms_filter'),
 
     # add transmitter
     path("add-transmitter", views.add_transmitter, name='add_transmitter'),
@@ -22,7 +22,7 @@ urlpatterns = [
     #url
    ## path("view-ionograms/<str:folder_name>/<str:filename>", views.view_ionograms, name='view-ionograms'),
     path("view-ionograms/<str:folder_name>/<str:filename>/<int:id>/", views.view_ionograms, name='view-ionograms'),
-    path("filter-ionograms/<str:folder_name>/<int:id>/", views.filter_ionograms, name='ionograms_filter'),
+    path("list-ionograms/<str:folder_name>/<int:id>/", views.filter_ionograms, name='ionograms_filter'),
     path("edit-transmitter/<str:tx_code>/<int:id>/", views.edit_transmitter, name='edit-transmitter'),
     path("edit-filter-transmitter/<str:tx_code>/<int:id>/", views.edit_filter_transmitter, name='edit_filter_transmitter'),
     path("clear-classification/", views.clear_classification, name='clear_classification'),

@@ -10,7 +10,7 @@ function api_call(folder_name, id)
 {
 
   var result;
-  var url = `/api/filter-ionograms/${folder_name}/${id}`;
+  var url = `/api/list-ionograms/${folder_name}/${id}`;
   const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
@@ -28,8 +28,8 @@ function displayMessage(folder_name) {
 
   window.open('/log', '_blank');
   var transmitter_id = document.getElementById("transmitter_id").value;
-  var url = `/api/filter-ionograms/${folder_name}/${transmitter_id}`;
-  var redirect_url = `/filter-ionograms/${folder_name}/${transmitter_id}`;
+  var url = `/api/list-ionograms/${folder_name}/${transmitter_id}`;
+  var redirect_url = `/list-ionograms/${folder_name}/${transmitter_id}`;
 
   const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {

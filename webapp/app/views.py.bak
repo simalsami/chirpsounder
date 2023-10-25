@@ -273,7 +273,7 @@ def edit_receiver(request, id):
 
 def create_ionograms(request, filename):
     create_plot_ionograms(filename)
-    return redirect('/filter-ionograms/3')
+    return redirect('/list-ionograms/3')
 
 
 def get_folder_name(path):

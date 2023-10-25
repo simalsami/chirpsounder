@@ -40,10 +40,7 @@ def delete_sounder(request, id):
 
 
 def view_ionograms(request, folder_name, filename,  id=None):
-    """
-    Functions to view filtered ionograms
-
-    """
+    
     
     
     conn = create_db_connection()
@@ -81,28 +78,10 @@ def view_ionograms(request, folder_name, filename,  id=None):
         "for_previous": for_previous,
         "for_next": for_next,
     })
-''' import ipdb; ipdb.set_trace
-    filter_data = []
-    for i in h5_files:
-        
-        png_file = i.split(".")[0: 2]
-        if f"{'.'.join(png_file[0: 2])}.png" in png_files:
-            filter_data.append(f"{'.'.join(png_file[0: 2])}.png")
-    for_previous = []
-    for_next = []
 
-
-    index = filter_data.index(f"{'.'.join(filename.split('.')[0: 2])}.png")
-    for_previous = filter_data[0: index]
-    for_next = filter_data[index+1:]
-    return render(request, 'view-ionograms.html', {'folder_name': folder_name, "filename": filename, "for_previous": for_previous, "for_next": for_next, })
-'''
 
 def timestamp_to_datetime(timestamp):
-    """
-    This function is used to convert the timestamp to readable date time. 
-
-    """
+    
     timestamp = int(timestamp)
     dt = datetime.utcfromtimestamp(timestamp).replace(
         tzinfo=timezone.utc) 
@@ -273,7 +252,7 @@ def edit_receiver(request, id):
 
 def create_ionograms(request, filename):
     create_plot_ionograms(filename)
-    return redirect('/filter-ionograms/3')
+    return redirect('/list-ionograms/3')
 
 
 def get_folder_name(path):
@@ -282,22 +261,21 @@ def get_folder_name(path):
 
 
 
-def unfiltered_ionograms(request):
-    lst = glob.glob(rootdir)
-    lst = list(map(get_folder_name, lst))
-    page = request.GET.get('page', 1)
+# def unfiltered_ionograms(request):
+#     lst = glob.glob(rootdir)
+#     lst = list(map(get_folder_name, lst))
+#     page = request.GET.get('page', 1)
 
-    paginator = Paginator(lst, 40)
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
+#     paginator = Paginator(lst, 40)
+#     try:
+#         users = paginator.page(page)
+#     except PageNotAnInteger:
+#         users = paginator.page(1)
+#     except EmptyPage:
+#         users = paginator.page(paginator.num_pages)
 
 
-    return render(request, 'all-ionograms.html', {"users": users})
-
+#     return render(request, 'all-ionograms.html', {"users": users})
 
 
 
