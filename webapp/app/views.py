@@ -307,7 +307,7 @@ def view_ionograms_by_tx_code(request, tx_code, id):
 
             }
         )
-    return render(request, 'view-unfiltered_ionograms.html', {"data": data, "filtered_data": filter_data, "id": id})
+    return render(request, 'list-ionograms.html', {"data": data, "filtered_data": filter_data, "id": id})
 
 
 def view_filtered_ionograms(request, id):
@@ -433,7 +433,7 @@ def search_by_codes(request):
 
             
 
-    return render(request, 'view-unfiltered_ionograms.html', {"data": data, "filtered_data": filter_data})
+    return render(request, 'list-ionograms.html', {"data": data, "filtered_data": filter_data})
 
 
 def loginfo(request):
