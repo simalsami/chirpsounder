@@ -136,7 +136,7 @@ def event_stream():
         yield 'data: The server time is: %s\n\n' % datetime.datetime.now()
 
 
-def filter_ionograms(request, folder_name, id):
+def list_ionograms(request, folder_name, id):
     conn = create_db_connection()
     data = Chripsounder.objects.filter(id=int(id)).values()[0]
     files = list(get_lfm_ionograms(conn, folder_name))

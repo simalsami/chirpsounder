@@ -100,7 +100,7 @@ def filter_ionograms_api(request, folder_name, id):
         if len(files) > 0:
             files = files
         else:
-            filter_ionogram.creating_data_file(data, folder_name)
+            list_ionograms.creating_data_file(data, folder_name)
         files = list(get_lfm_ionograms_api(conn, folder_name))
         json_data = {"data": files}
         if len(json_data):
@@ -115,7 +115,7 @@ def event_stream():
         yield 'data: The server time is: %s\n\n' % datetime.datetime.now()
 
 
-def filter_ionograms(request, folder_name, id):
+def list_ionograms(request, folder_name, id):
     conn = create_db_connection()
     data = Chripsounder.objects.filter(id=int(id)).values()[0]
     files = list(get_lfm_ionograms(conn, folder_name))
@@ -136,7 +136,7 @@ def filter_ionograms(request, folder_name, id):
         tmp = {'inx':inx,'fname':fname,'dt':dt}
         entries.append(tmp)
     
-    return render(request, 'filter_ionogram.html', {"data": entries, "name": data, "date": folder_name,"id": id})
+    return render(request, 'list-ionograms.html', {"data": entries, "name": data, "date": folder_name,"id": id})
     # files_list = [{'file':fl,'dt':dt} for fl,dt in zip(files,dts)]
     # import ipdb; ipdb.set_trace()
     # files_dct= {"files":files, "dt":dts}

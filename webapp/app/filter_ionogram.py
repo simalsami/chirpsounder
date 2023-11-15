@@ -55,7 +55,7 @@ def k_largest_index_argsort(S, k):
     return n.column_stack(n.unravel_index(idx, S.shape))
 
 # Name               :               Nisha Yadav
-# Function Name      :               filter_ionograms
+# Function Name      :               list-ionograms
 # Functionality      :               Filter ionograms function is applied on the row data, and we are getting filtered data of transmitter.
 # Parameters         :               Dirs1, data, files, DataDict
 
@@ -63,7 +63,7 @@ def k_largest_index_argsort(S, k):
 logger = logging.getLogger(__name__)
 
 
-def filter_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
+def list_ionograms(dirs1, data, f, DataDict, normalize_by_frequency=True):
     file_name = f.split("/")[-1]
     ho = None
     
@@ -316,7 +316,7 @@ def creating_data_file(data, folder_name):
                         # log_file.write('ch1=%d\n' %(ch1))
 
 
-                        filter_ionograms(dirs1, data, f, DataDict)
+                        list-ionograms(dirs1, data, f, DataDict)
                         
 
                     # if DataDict['ch1'] > 1:
